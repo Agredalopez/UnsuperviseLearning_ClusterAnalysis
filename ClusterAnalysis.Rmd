@@ -1,0 +1,53 @@
+---
+title: "**Análisis de Conglomerados**"
+author: "Msc. Dennier Agreda López" 
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+header-includes:
+   - \usepackage{setspace}
+output:
+  pdf_document:
+    fig_caption: true
+    fig_height: 2
+    fig_width: 2
+    toc: true
+    toc_depth: 3
+    latex_engine: xelatex
+    extra_dependencies: ["amsmath", "blkarray","caption","floatrow","fontspec"]
+fontsize: 12pt
+font-family: 'Helvetica'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, eval = T, message = F, cache=F, comment = F, warning = F)
+```
+
+# 1. Introducción
+
+En el mundo de *Machine Learning* existen un sinnumero de opciones para abordar diferentes problemas de negocio, tanto por el lado de los métodos *supervised learning*, lo cuales tienes la característica de tener una variable objetivo a predecir, así como las tareas abordadas por las técnicas de *reinforcement learning* es un área del aprendizaje automático inspirada en la psicología conductista, cuya ocupación es determinar qué acciones debe escoger un agente con el fin de maximizar alguna noción de "recompensa" o premio acumulado. 
+
+Por el otro extremo, tenemos a las técnicas que buscan solucionar situaciones de negocio en dónde no se tiene un *target* natural, está interesado en descubrir propiedades útiles de los datos disponibles, este tipo de aprendizaje se le conoce como *unsupervised learning*.
+
+El aprendizaje no supervisado se refiere a un conjunto diverso de técnicas para responder preguntas como ¿Existe una forma informativa de visualizar los datos? ¿Podemos descubrir subgrupos entre las variables o entre las observaciones? En general, el aprendizaje no supervisado se puede abordar por el lado de reducción de dimensionalidad y en la generación de agrupaciones que sean similares entre sí dentro de cada grupo.
+
+Este documento en particular busca abordar el último punto mencionado en el párrafo anterior, también conocido como "**Análisis de Conglomerados**", partiendo de conceptos importantes, relacionados a la semejanza, distancia, evaluación de las técnicas y diferentes tipologías dependiendo el problema a abordar.
+
+# 2. Clustering
+
+El análisis de conglomerados o clústeres, se le conoce también como segmentación de datos tiene una variedad de objetivos. Todos ellos relacionados con segmentar o agrupar un conjunto de objetos en subcolecciones o grupos.
+
+Cuando agrupamos las observaciones de un conjunto de datos, buscamos dividirlas en grupos distintos para que las observaciones dentro de cada grupo sean bastante similares entre sí, mientras que las observaciones en diferentes grupos sean bastante diferentes entre sí. Por supuesto, para que esto sea concreto, debemos definir qué significa que dos o más observaciones sean *similares* o *diferentes*. De hecho, esta es a menudo una consideración específica del dominio que debe hacerse basándose en el conocimiento de los datos que se estudian.
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
