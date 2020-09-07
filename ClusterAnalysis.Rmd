@@ -7,18 +7,24 @@ header-includes:
 output:
   pdf_document:
     fig_caption: true
-    fig_height: 2
-    fig_width: 2
+    fig_height: 4
+    fig_width: 4
     toc: true
-    toc_depth: 3
+    toc_depth: 4
     latex_engine: xelatex
     extra_dependencies: ["amsmath", "blkarray","caption","floatrow","fontspec"]
 fontsize: 12pt
 font-family: 'Helvetica'
 ---
+\spacing{1.5}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F, eval = T, message = F, cache=F, comment = F, warning = F)
+```
+
+```{r library}
+library(ggpubr)
+library(factoextra)
 ```
 
 # 1. Introducción
@@ -31,23 +37,131 @@ El aprendizaje no supervisado se refiere a un conjunto diverso de técnicas para
 
 Este documento en particular busca abordar el último punto mencionado en el párrafo anterior, también conocido como "**Análisis de Conglomerados**", partiendo de conceptos importantes, relacionados a la semejanza, distancia, evaluación de las técnicas y diferentes tipologías dependiendo el problema a abordar.
 
+```{r fig1, fig.cap="\\label{fig:fig1}**Resultado de un Agrupamiento de _K-medias_ con K=3**", fig_align = "center"}
+set.seed(2)
+x<-matrix (rnorm (75*2) , ncol =2)
+x[1:25 ,1]<-x[1:25 ,1]+3
+x[1:25 ,2]<-x[1:25 ,2]-4
+x[51:75 ,1]<-x[51:75 ,1]
+x[51:75 ,2]<-x[51:75 ,2]-4
+km.out <-kmeans (x,3, nstart =20)
+x<-data.frame(x)
+x$cluster<-factor(km.out$cluster)
+ggscatter(font.label = c(20, "serif"),
+  x, x = "X1", y = "X2", ellipse = T,
+  color = "cluster", palette = c("green","blue","red"),
+  size = 1.5,  legend = "down", ggtheme = theme_bw(), 
+  xlab = expression(italic("X"[1])),
+  ylab = expression(italic("X"[2]))) + stat_mean(aes(color = cluster), size = 3)+
+  theme(text=element_text(size=12,  family="serif")) 
+#c("red","blue")[km.out$cluster]
+```
+
 # 2. Clustering
 
 El análisis de conglomerados o clústeres, se le conoce también como segmentación de datos tiene una variedad de objetivos. Todos ellos relacionados con segmentar o agrupar un conjunto de objetos en subcolecciones o grupos.
 
-Cuando agrupamos las observaciones de un conjunto de datos, buscamos dividirlas en grupos distintos para que las observaciones dentro de cada grupo sean bastante similares entre sí, mientras que las observaciones en diferentes grupos sean bastante diferentes entre sí. Por supuesto, para que esto sea concreto, debemos definir qué significa que dos o más observaciones sean *similares* o *diferentes*. De hecho, esta es a menudo una consideración específica del dominio que debe hacerse basándose en el conocimiento de los datos que se estudian.
+Cuando agrupamos las observaciones de un conjunto de datos, buscamos dividirlas en grupos distintos para que las observaciones dentro de cada grupo sean bastante similares entre sí (homogeneidad), mientras que las observaciones en diferentes grupos sean bastante diferentes entre sí. Además, en ocasiones, el objetivo es organizar los segmentos en una jerarquía natural (agrupar o separar sucesivamente los clústeres).
+
+En definitiva, para que esto sea concreto, debemos definir qué significa que dos o más observaciones sean *similares* o *diferentes*. De hecho, esta es a menudo una consideración específica del dominio que debe hacerse basándose en el conocimiento de los datos que se estudian. 
+
+## 2.1. Aplicaciones
+
+Entre los principales usos que se les da a las técnicas de de Agrupamiento se hallan:
+
+* Segmentación de Cartera de Clientes
+* Investigación de Mercados
+* Marketing Dirigido
+* Árboles Genealógicos - Filogenéticos
+* Análisis de Redes Sociales
+* Recomendaciones Personalizadas[^1]
+* Seguros
+* Procesamiento de Imágenes
+
+**Nota:** El agrupamiento es una técnica exploratoria de datos, ***genera hipótesis***, no las valida, es decir a posteriori el analista tiene que encontrar justificación análitica a los resultados.
+
+# 3. Indicadores y Métricas
+
+Cuando se habla de agrupamiento se resaltan dos conceptos importantes que están asociados a la similitud entre datos que propocia la generación de grupos y la distancia entre cada grupo, es decir que tan heterogéneos son entre sí. Partiendo de ello, se considera dos puntos importantes que son la ***cohesión*** y la ***separación***.
+
+## 3.1. Indicadores
+
+* **Sum of Squared Within** ***(SSW)*****:** Suma de distancias al cuadrado de los miembros de un mismo grupo respecto al centroide. En esencia, evalúa la *cohesión* de los grupos generados. $$SSW=\sum_{i=1}^k \sum_{x{\in}C_{i}}(x-m_{i})^2$$
+
+* **Sum of Squared Between** ***(SSB)*****:** Suma de distancias a un punto medio del dataset. La intención de este indicador es medir la *separación* entre los grupos. $$SSB=\sum_{i=1}^k n_{i}*(X-m_{i})^2$$
+
+## 3.2. Métricas
+
+### 3.2.1. Evaluación
+
+### 3.2.2. Proximidad
+
+#### 3.2.2.1 Tipos de Distancia
+
+##### 3.2.2.1.1. Euclidea
+
+##### 3.2.2.1.2. Manhattan
+
+##### 3.2.2.1.3. Chebychev
+
+##### 3.2.2.1.4. Minkowsky
+
+##### 3.2.2.1.5. Mahalanobis
+
+#### 3.2.2.2. Tipos de Semejanza
+
+##### 3.2.2.2.1 Índice de Jaccard
+
+##### 3.2.2.2.2. Índice de Acoplamiento Simple
+
+##### 3.2.2.2.3. Índice de Russel
+
+##### 3.2.2.2.4. Índice de Dice
+
+##### 3.2.2.2.5. Semejanza Coseno
+
+# 4. Tipología de Agrupamientos
+
+## 4.1. Según la Jerarquía
+
+## 4.2. Según la Cohesión
+
+### 4.2.1. Basados en Centroides
+
+### 4.2.2. Basados en Grafos
+
+### 4.2.3. Basados en Densidades
+
+## 4.3. Según la Pertenencia
+
+### 4.3.1. Exclusivos
+
+### 4.3.2. No Exclusivos
+
+## 4.4. Según la Estructura
+
+### 4.4.1. Aglomerativos
+
+### 4.4.2. Divisivos
+
+# 5. Caracterización de la Construcción
+
+## 5.1. Secuencia Lógica
+
+## 5.2. Matrices Importantes
+
+### 5.2.1. Matriz de Características
+
+### 5.2.2. Matriz de Proximidad
+
+# 6. Agrupamiento Jerárquico
+
+# 7. Agrupamiento Particional Global
+
+# 8. Agrupamiento Particional Local
+
+# 9. Agrupamiento Probabilístico
 
 
-```{r cars}
-summary(cars)
-```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+[^1]: Lo referente a Sistemas de Recomendación y las diversas técnicas aplicadas para estos fines no se serán abordados en este documento.
